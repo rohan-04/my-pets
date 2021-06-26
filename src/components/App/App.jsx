@@ -3,27 +3,20 @@ import './App.css';
 
 import Header from '../Header/Header';
 import Searchbox from '../Searchbox/Searchbox';
+import Card from '../Card/Card';
 
 const App = () => {
 	const [searchField, setSearchField] = useState('dog');
 	const [pets, setPets] = useState([]);
 
 	useEffect(() => {
-		requestPets();
-	}, []);
+		requestSearchedPets();
+	}, [searchField]);
 
-	const requestPets = () => {
-		fetch('https://60d075407de0b20017108b89.mockapi.io/api/v1/animals')
-			.then((response) => response.json())
-			.then((data) => {
-				setPets(data);
-				console.log(data);
-			});
-	};
-
+	// Search pets according to searchbox
 	const requestSearchedPets = () => {
 		fetch(
-			`https://60d075407de0b20017108b89.mockapi.io/api/v1/animals?search=${searchField}`
+			`https://60d075407de0b20017108b89.mockapi.io/api/v1/animals?name=${searchField}`
 		)
 			.then((response) => response.json())
 			.then((data) => {
@@ -32,10 +25,10 @@ const App = () => {
 			});
 	};
 
+	// Update pets list for new search
 	const searchFieldUpdate = (e) => {
 		e.preventDefault();
 		setSearchField(e.target.value);
-		requestSearchedPets();
 	};
 
 	return (
@@ -49,7 +42,9 @@ const App = () => {
 			/>
 
 			{/* FilterOption */}
+
 			{/* Card */}
+			<Card pets={pets} />
 		</div>
 	);
 };

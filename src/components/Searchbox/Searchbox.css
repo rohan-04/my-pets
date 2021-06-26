@@ -1,7 +1,13 @@
+.searchbox {
+	margin-top: 16px;
+	margin-bottom: 30px;
+}
+
 .searchbox-input {
 	border: none;
 	padding: 15px;
-	width: 70%;
+	width: 95%;
 	border: 0.2px solid #9ca3af;
 	outline: none;
+	border-radius: 5px;
 }
