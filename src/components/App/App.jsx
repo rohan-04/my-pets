@@ -3,11 +3,13 @@ import './App.css';
 
 import Header from '../Header/Header';
 import Searchbox from '../Searchbox/Searchbox';
+import FilterOption from '../FilterOption/FilterOption';
 import Card from '../Card/Card';
 
 const App = () => {
 	const [searchField, setSearchField] = useState('dog');
 	const [pets, setPets] = useState([]);
+	let order = 'asc';
 
 	useEffect(() => {
 		requestSearchedPets();
@@ -16,12 +18,15 @@ const App = () => {
 	// Search pets according to searchbox
 	const requestSearchedPets = () => {
 		fetch(
-			`https://60d075407de0b20017108b89.mockapi.io/api/v1/animals?name=${searchField}`
+			`https://60d075407de0b20017108b89.mockapi.io/api/v1/animals?name=${searchField}&orderBy=${order}`
 		)
 			.then((response) => response.json())
 			.then((data) => {
 				setPets(data);
 				console.log(data);
+			})
+			.catch((err) => {
+				console.log(err);
 			});
 	};
 
@@ -31,10 +36,27 @@ const App = () => {
 		setSearchField(e.target.value);
 	};
 
+	// Filter data in ascending/descending order
+	const FilterAscDecOrder = () => {
+		// order = order === 'acs' ? 'desc' : 'asc';
+		fetch(
+			`https://60d075407de0b20017108b89.mockapi.io/api/v1//animals?name=${searchField}&sortBy=createdAt&orderBy=${order}`
+		)
+			.then((response) => response.json())
+			.then((data) => {
+				setPets(data);
+				console.log(data);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
+
 	return (
 		<div className="app">
 			{/* Header */}
 			<Header />
+
 			{/* Searchbar */}
 			<Searchbox
 				searchFieldUpdate={searchFieldUpdate}
@@ -42,6 +64,7 @@ const App = () => {
 			/>
 
 			{/* FilterOption */}
+			<FilterOption FilterAscDecOrder={FilterAscDecOrder} />
 
 			{/* Card */}
 			<Card pets={pets} />
