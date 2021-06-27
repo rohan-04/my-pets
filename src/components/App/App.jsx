@@ -38,6 +38,7 @@ const App = () => {
 			.then((response) => response.json())
 			.then((data) => {
 				data.forEach((pet) => {
+					// Coverting date to age
 					let dateString = pet.bornAt.split('T')[0];
 					let ageInMilliseconds = new Date() - new Date(dateString);
 					pet.age = Math.floor((ageInMilliseconds / 31536000000) * 12);
@@ -69,11 +70,13 @@ const App = () => {
 		requestSearchedPets(searchText);
 	};
 
+	// Filter pets less than one month
 	const FilterLessThanOneMonth = () => {
 		let filteredPetsArray = pets.filter((pet) => pet.age <= 1);
 		setFilteredPets(filteredPetsArray);
 	};
 
+	// Filter pets more than one month
 	const FilterMoreThanOneMonth = () => {
 		let filteredPetsArray = pets.filter((pet) => pet.age > 1);
 		setFilteredPets(filteredPetsArray);

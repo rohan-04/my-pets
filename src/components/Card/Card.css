@@ -5,3 +5,10 @@
 	border-radius: 15px;
 	background-color: #fff;
 }
+
+.notFound {
+	font-size: 32px;
+	color: #989fac;
+	font-weight: 800;
+	text-align: center;
+}
