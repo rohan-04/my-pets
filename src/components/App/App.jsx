@@ -7,19 +7,20 @@ import FilterOption from '../FilterOption/FilterOption';
 import Card from '../Card/Card';
 
 const App = () => {
-	const [searchText, setSearchText] = useState('dog');
+	const [searchText, setSearchText] = useState('');
 	const [pets, setPets] = useState([]);
+	const [filteredPets, setFilteredPets] = useState([]);
 	const [sortOrder, setSortOrder] = useState('asc');
 
 	useEffect(() => {
 		// Initial render
-		if (searchText && !pets) {
-			requestSearchedPets();
+		if (!searchText) {
+			requestSearchedPets('dog');
 		} else {
 			// Delay search to avoid multiple api calls
 			const timeOutId = setTimeout(() => {
 				if (searchText) {
-					requestSearchedPets();
+					requestSearchedPets(searchText);
 				}
 			}, 500);
 
@@ -30,21 +31,21 @@ const App = () => {
 	}, [searchText]);
 
 	// Search pets according to searchbox
-	const requestSearchedPets = () => {
+	const requestSearchedPets = (searchterm) => {
 		fetch(
-			`https://60d075407de0b20017108b89.mockapi.io/api/v1/animals?name=${searchText}&sortBy=createdAt&order=${sortOrder}`
+			`https://60d075407de0b20017108b89.mockapi.io/api/v1/animals?name=${searchterm}&sortBy=name&order=${sortOrder}`
 		)
 			.then((response) => response.json())
 			.then((data) => {
 				data.forEach((pet) => {
 					let dateString = pet.bornAt.split('T')[0];
 					let ageInMilliseconds = new Date() - new Date(dateString);
-					pet.age = Math.floor(ageInMilliseconds / 1000 / 60 / 60 / 24 / 12);
-					console.log(pet.age);
+					pet.age = Math.floor((ageInMilliseconds / 31536000000) * 12);
+					// console.log(pet.bornAt);
 				});
 				// Set updated age of pets
 				setPets(data);
-				// console.log(data);
+				setFilteredPets(data);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -59,23 +60,23 @@ const App = () => {
 
 	// Filter data in ascending/descending order
 	const FilterAscDecOrder = () => {
-		if (sortOrder === 'asc') {
-			setSortOrder('desc');
-		} else {
+		if (sortOrder === 'desc') {
 			setSortOrder('asc');
+		} else {
+			setSortOrder('desc');
 		}
 
-		requestSearchedPets();
+		requestSearchedPets(searchText);
 	};
 
 	const FilterLessThanOneMonth = () => {
-		let filteredPets = pets.filter((pet) => pet.age <= 1);
-		setPets(filteredPets);
+		let filteredPetsArray = pets.filter((pet) => pet.age <= 1);
+		setFilteredPets(filteredPetsArray);
 	};
 
 	const FilterMoreThanOneMonth = () => {
-		let filteredPets = pets.filter((pet) => pet.age > 1);
-		setPets(filteredPets);
+		let filteredPetsArray = pets.filter((pet) => pet.age > 1);
+		setFilteredPets(filteredPetsArray);
 	};
 
 	return (
@@ -94,7 +95,7 @@ const App = () => {
 			/>
 
 			{/* Card */}
-			<Card pets={pets} />
+			<Card pets={filteredPets} />
 		</div>
 	);
 };
