@@ -7,18 +7,30 @@ import FilterOption from '../FilterOption/FilterOption';
 import Card from '../Card/Card';
 
 const App = () => {
-	const [searchField, setSearchField] = useState('dog');
+	const [searchText, setSearchText] = useState('dog');
 	const [pets, setPets] = useState([]);
 	let order = 'asc';
 
 	useEffect(() => {
-		requestSearchedPets();
-	}, [searchField]);
+		// Initial render
+		if (searchText && !pets) {
+			requestSearchedPets();
+		} else {
+			// Delay search to avoid multiple api calls
+			const timeOutId = setTimeout(() => {
+				requestSearchedPets();
+			}, 500);
+
+			return () => {
+				clearTimeout(timeOutId);
+			};
+		}
+	}, [searchText]);
 
 	// Search pets according to searchbox
 	const requestSearchedPets = () => {
 		fetch(
-			`https://60d075407de0b20017108b89.mockapi.io/api/v1/animals?name=${searchField}&orderBy=${order}`
+			`https://60d075407de0b20017108b89.mockapi.io/api/v1/animals?name=${searchText}&orderBy=${order}`
 		)
 			.then((response) => response.json())
 			.then((data) => {
@@ -31,16 +43,16 @@ const App = () => {
 	};
 
 	// Update pets list for new search
-	const searchFieldUpdate = (e) => {
+	const searchTextUpdate = (e) => {
 		e.preventDefault();
-		setSearchField(e.target.value);
+		setSearchText(e.target.value);
 	};
 
 	// Filter data in ascending/descending order
 	const FilterAscDecOrder = () => {
 		// order = order === 'acs' ? 'desc' : 'asc';
 		fetch(
-			`https://60d075407de0b20017108b89.mockapi.io/api/v1//animals?name=${searchField}&sortBy=createdAt&orderBy=${order}`
+			`https://60d075407de0b20017108b89.mockapi.io/api/v1//animals?name=${searchText}&sortBy=createdAt&orderBy=${order}`
 		)
 			.then((response) => response.json())
 			.then((data) => {
@@ -58,10 +70,7 @@ const App = () => {
 			<Header />
 
 			{/* Searchbar */}
-			<Searchbox
-				searchFieldUpdate={searchFieldUpdate}
-				searchField={searchField}
-			/>
+			<Searchbox searchTextUpdate={searchTextUpdate} searchText={searchText} />
 
 			{/* FilterOption */}
 			<FilterOption FilterAscDecOrder={FilterAscDecOrder} />

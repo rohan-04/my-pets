@@ -1,15 +1,15 @@
 import React from 'react';
 import './Searchbox.css';
 
-const Searchbox = ({ searchFieldUpdate, searchField }) => {
+const Searchbox = ({ searchTextUpdate, searchText }) => {
 	return (
 		<div className="searchbox">
 			<input
-				onChange={(e) => searchFieldUpdate(e)}
+				onChange={(e) => searchTextUpdate(e)}
 				className="searchbox-input"
 				type="text"
 				placeholder="Search pets"
-				value={searchField}
+				value={searchText}
 			/>
 		</div>
 	);
