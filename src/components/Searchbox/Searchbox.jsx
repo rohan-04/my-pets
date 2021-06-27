@@ -3,7 +3,7 @@ import './Searchbox.css';
 
 const Searchbox = ({ searchTextUpdate, searchText }) => {
 	return (
-		<div className="searchbox">
+		<div className="searchbox icon-input">
 			<input
 				onChange={(e) => searchTextUpdate(e)}
 				className="searchbox-input"
@@ -11,6 +11,7 @@ const Searchbox = ({ searchTextUpdate, searchText }) => {
 				placeholder="Search pets"
 				value={searchText}
 			/>
+			<i className="fa fa-search search-icon" />
 		</div>
 	);
 };

@@ -2,6 +2,7 @@
 	margin-top: 16px;
 	margin-bottom: 30px;
 	display: flex;
+	position: relative;
 }
 
 .searchbox-input {
@@ -14,4 +15,16 @@
 	letter-spacing: 0.5px;
 	color: #4b5563;
 	font-size: 16px;
+}
+
+.search-icon {
+	color: #4b5563;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	right: 15px;
+}
+
+.searchbox-input:focus {
+	border: 1px solid #323a44;
 }

@@ -9,7 +9,7 @@ import Card from '../Card/Card';
 const App = () => {
 	const [searchText, setSearchText] = useState('dog');
 	const [pets, setPets] = useState([]);
-	let order = 'asc';
+	const [sortOrder, setSortOrder] = useState('asc');
 
 	useEffect(() => {
 		// Initial render
@@ -18,7 +18,9 @@ const App = () => {
 		} else {
 			// Delay search to avoid multiple api calls
 			const timeOutId = setTimeout(() => {
-				requestSearchedPets();
+				if (searchText) {
+					requestSearchedPets();
+				}
 			}, 500);
 
 			return () => {
@@ -30,12 +32,19 @@ const App = () => {
 	// Search pets according to searchbox
 	const requestSearchedPets = () => {
 		fetch(
-			`https://60d075407de0b20017108b89.mockapi.io/api/v1/animals?name=${searchText}&orderBy=${order}`
+			`https://60d075407de0b20017108b89.mockapi.io/api/v1/animals?name=${searchText}&sortBy=createdAt&order=${sortOrder}`
 		)
 			.then((response) => response.json())
 			.then((data) => {
+				data.forEach((pet) => {
+					let dateString = pet.bornAt.split('T')[0];
+					let ageInMilliseconds = new Date() - new Date(dateString);
+					pet.age = Math.floor(ageInMilliseconds / 1000 / 60 / 60 / 24 / 12);
+					console.log(pet.age);
+				});
+				// Set updated age of pets
 				setPets(data);
-				console.log(data);
+				// console.log(data);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -50,18 +59,23 @@ const App = () => {
 
 	// Filter data in ascending/descending order
 	const FilterAscDecOrder = () => {
-		// order = order === 'acs' ? 'desc' : 'asc';
-		fetch(
-			`https://60d075407de0b20017108b89.mockapi.io/api/v1//animals?name=${searchText}&sortBy=createdAt&orderBy=${order}`
-		)
-			.then((response) => response.json())
-			.then((data) => {
-				setPets(data);
-				console.log(data);
-			})
-			.catch((err) => {
-				console.log(err);
-			});
+		if (sortOrder === 'asc') {
+			setSortOrder('desc');
+		} else {
+			setSortOrder('asc');
+		}
+
+		requestSearchedPets();
+	};
+
+	const FilterLessThanOneMonth = () => {
+		let filteredPets = pets.filter((pet) => pet.age <= 1);
+		setPets(filteredPets);
+	};
+
+	const FilterMoreThanOneMonth = () => {
+		let filteredPets = pets.filter((pet) => pet.age > 1);
+		setPets(filteredPets);
 	};
 
 	return (
@@ -73,7 +87,11 @@ const App = () => {
 			<Searchbox searchTextUpdate={searchTextUpdate} searchText={searchText} />
 
 			{/* FilterOption */}
-			<FilterOption FilterAscDecOrder={FilterAscDecOrder} />
+			<FilterOption
+				FilterAscDecOrder={FilterAscDecOrder}
+				FilterLessThanOneMonth={FilterLessThanOneMonth}
+				FilterMoreThanOneMonth={FilterMoreThanOneMonth}
+			/>
 
 			{/* Card */}
 			<Card pets={pets} />

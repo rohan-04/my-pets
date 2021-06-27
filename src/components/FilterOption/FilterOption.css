@@ -3,7 +3,7 @@
 	flex-wrap: wrap;
 }
 
-.chip {
+.filter {
 	border: none;
 	background-color: #fff;
 	padding: 8px 16px;
@@ -14,7 +14,15 @@
 	color: #989fac;
 	transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
 	letter-spacing: 0.5px;
+	font-size: 14px;
 }
-.chip:hover {
+
+.filter img {
+	width: 15px;
+	height: 15px;
+	vertical-align: middle;
+}
+
+.filter:hover {
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
 }

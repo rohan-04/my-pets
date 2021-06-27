@@ -1,16 +1,25 @@
 import React from 'react';
 import './FilterOption.css';
+import filterIcon from '../../assets/images/filter-icon.png';
 
-const FilterOption = ({ FilterAscDecOrder }) => {
+const FilterOption = ({
+	FilterAscDecOrder,
+	FilterLessThanOneMonth,
+	FilterMoreThanOneMonth,
+}) => {
 	return (
 		<div className="filter-container">
-			<button onClick={() => FilterAscDecOrder()} className="filter chip">
-				Filters
+			<button onClick={() => FilterAscDecOrder()} className="filter">
+				<img src={filterIcon} /> Filters
 			</button>
 
-			<button className="chip">Less than 1 Month Old</button>
+			<button onClick={() => FilterLessThanOneMonth()} className="filter">
+				Less than 1 Month Old
+			</button>
 
-			<button className="chip">More than 1 Month Old</button>
+			<button onClick={() => FilterMoreThanOneMonth()} className="filter">
+				More than 1 Month Old
+			</button>
 		</div>
 	);
 };
